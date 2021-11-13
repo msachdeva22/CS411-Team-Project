@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1 "Enter a city to display current conditions"
+    form(method='POST')
+        p City:
+        input(type='text', name='City', value='')
+        input(type='submit', value='Submit')
+
+    h2= temp    //weather data goes here
