@@ -1,5 +1,5 @@
 const express = require('express');
-const fetch = require('node-fetch');    // need to run 'npm install node-fetch' before usage
+const fetch = import('node-fetch');    // need to run 'npm install node-fetch' before usage
 const config = require('../config');
 const router = express.Router();
 
