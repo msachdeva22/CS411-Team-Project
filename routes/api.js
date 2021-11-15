@@ -1,5 +1,5 @@
 const express = require('express');
-const fetch = import('node-fetch');    // need to run 'npm install node-fetch' before usage
+const request = require('request');     //need to run 'npm install request' ; changed from fetch bc/issues with node versioning
 const config = require('../config');
 const router = express.Router();
 
@@ -8,19 +8,29 @@ const requestOptions = {
     redirect: 'follow'
 };
 
-const apiFirst = config.loc_endpoint + config.apiKey + '&q='    //query city will go after this
-const apiSecond = config.lang + config.details + config.offset
+router.get('/', function(req, res, next) {
+    res.render('api');
+});
 
-router.post('/api', (req, res, next) => {
-    fetch("tempurl", requestOptions)
-        .then(response => response[0].json())   //search returns an array of cities, select first result to parse?
-        .then(
-            result => {
-                //will do work on api data in here
-                console.log(result)
-            }
-        )
-        .catch(error => console.log('error', error));
+const locApi1 = config.loc_endpoint + config.apiKey + '&q='    //query city will go after this
+const locApi2 = config.lang + config.details
+
+router.post('/', (req, res, next) => {
+    request(locApi1 + req.body.City + locApi2, requestOptions, function(error, response, body)  {
+        const jsonLoc = JSON.parse(body);
+        const firstResult = jsonLoc[0];    //grabs top result from city search
+
+        const condApi = config.cond_endpoint + firstResult.Key + '?apikey=' + config.apiKey + config.lang + config.details
+        request(condApi, requestOptions, function(error, response, body)  {
+            const jsonCond = JSON.parse(body)[0];
+
+            res.render('api', {conditions: jsonCond.WeatherText, tempVal: jsonCond.Temperature.Imperial.Value,
+                                            tempUnit: jsonCond.Temperature.Imperial.Unit});
+        })
+
+
+        //res.render('api',{stateName: firstResult.AdministrativeArea.EnglishName });
+    })
 });
 
 module.exports = router;
