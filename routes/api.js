@@ -24,8 +24,8 @@ router.post('/', (req, res, next) => {
         request(condApi, requestOptions, function(error, response, body)  {
             const jsonCond = JSON.parse(body)[0];
 
-            res.render('api', {conditions: jsonCond.WeatherText, tempVal: jsonCond.Temperature.Imperial.Value,
-                                            tempUnit: jsonCond.Temperature.Imperial.Unit});
+            res.render('api', {conditions: jsonCond.WeatherText + ", " + jsonCond.Temperature.Imperial.Value
+                    + jsonCond.Temperature.Imperial.Unit});
         })
 
 
