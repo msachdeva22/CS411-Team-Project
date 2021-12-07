@@ -6,6 +6,15 @@ const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const config = require('../config');
 
+//redis stuff
+const redis = require('redis'); //run redis-server before running webapp!
+const client = redis.createClient();
+const {promisify} = require('util');
+const getAsync = promisify(client.get).bind(client);
+const existsAsync = promisify(client.exists).bind(client);
+const setAsync = promisify(client.set).bind(client);
+const expireAsync = promisify(client.expire).bind(client);
+
 const client_id = config.sClient_Id; // Your client id
 const client_secret = config.sClient_Secret; // Your secret
 const redirect_uri = config.sRedirect_URI; // Your redirect uri
