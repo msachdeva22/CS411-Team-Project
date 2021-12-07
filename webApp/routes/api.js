@@ -13,8 +13,8 @@ router.get('/', function(req, res, next) {
 });
 
 //setting up location API endpoint string to be queried for data
-const locApi1 = config.loc_endpoint + config.apiKey + '&q='    //query city will go after this
-const locApi2 = config.lang + config.details
+const locApi1 = config.loc_endpoint + config.wApiKey + '&q='    //query city will go after this
+const locApi2 = config.wLang + config.wDetails
 
 router.post('/', (req, res, next) => {
     /* Queries location API, response if contained within the 'body' object if successful, error is filled if something
@@ -24,7 +24,7 @@ router.post('/', (req, res, next) => {
         const firstResult = jsonLoc[0];    //grabs top result from city search
 
         //Sets up API endpoint for the conditions API using the first result of the city search response
-        const condApi = config.cond_endpoint + firstResult.Key + '?apikey=' + config.apiKey + config.lang + config.details
+        const condApi = config.cond_endpoint + firstResult.Key + '?apikey=' + config.wApiKey + config.wLang + config.wDetails
         request(condApi, requestOptions, function(error, response, body)  {
             const jsonCond = JSON.parse(body)[0];
 

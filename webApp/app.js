@@ -3,6 +3,10 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+//oauth stuff
+const request = require('request'); // "Request" library
+const cors = require('cors'); //run npm install cors
+const querystring = require('querystring');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
