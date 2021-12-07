@@ -1,6 +1,7 @@
 const express = require('express'); // Express web server framework
 const request = require('request'); // "Request" library
 const cors = require('cors');
+const async = require('async');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const config = require('../config');
@@ -32,10 +33,6 @@ router.use(express.static(__dirname + '/public'))
     .use(cors())
     .use(cookieParser());
 
-router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Auth Page' });
-});
-
 router.get('/login', function(req, res) {
 
     let state = generateRandomString(16);
@@ -53,7 +50,7 @@ router.get('/login', function(req, res) {
         }));
 });
 
-router.get('/callback', function(req, res) {
+router.get('/callback', async (req, res, next) => {
 
     // your application requests refresh and access tokens
     // after checking the state parameter
