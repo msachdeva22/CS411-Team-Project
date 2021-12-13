@@ -40,11 +40,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', async(req,res,next) => {
-    res.render('api', { conditions: req.body.Username });
+    let mongo = await db.getDB('webapp');
+
+    let result = await mongo.collection('users').find().toArray();
 });
 
-router.get('/login', function(req, res) {
-
+router.get('/login', async(req, res, next) => {
     let state = generateRandomString(16);
     res.cookie(stateKey, state);
 
