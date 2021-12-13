@@ -33,7 +33,7 @@ html(lang='en')
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 300px;
+                height: 350px;
                 background-color: rgba(75, 81, 95, 0.3);
                 box-shadow: 7px 7px 17px rgba(52, 56, 66, 0.5);
                 border-radius: 5px;
@@ -75,11 +75,12 @@ html(lang='en')
             #form
                 h1(style='text-align: center;color: rgb(13, 13, 14);') Login
                 p(style='text-align: center;') Username
-                input#Username(type='text' placeholder='please enter Username')
-                p(style='text-align: center;') password
-                input#passworld(type='password' placeholder='password at least 6 digits')
+                form#loginDetails(method='POST' action="/auth/login")
+                    input#Username(type='text' placeholder='please enter Username' name='Username')
+                    p(style='text-align: center;') Password
+                    input#passworld(type='password' placeholder='password at least 6 digits' name='passworld')
                 div(style='text-align: center;margin-top: 30px;')
-                    button.button(onclick='denlu()') Login
+                    button.button(form="loginDetails" type="submit") Login
                     button#b2.button(onclick='click()') Registration
     script(language='javascript' type='text/javascript').
         document.getElementById("b2").onclick = function click(){

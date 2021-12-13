@@ -39,6 +39,9 @@ router.get('/', function(req, res, next) {
     res.render('auth');
 });
 
+router.post('/login', async(req,res,next) => {
+    res.render('api', { conditions: req.body.Username });
+});
 
 router.get('/login', function(req, res) {
 
