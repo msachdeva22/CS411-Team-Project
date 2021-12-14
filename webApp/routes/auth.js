@@ -5,8 +5,9 @@ const async = require('async');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const config = require('../config');
+const bcrypt = require('bcrypt');
+const User= require("../models/User");
 
-const db = require('../mongoSetup')
 
 const client_id = config.sClient_Id; // Your client id
 const client_secret = config.sClient_Secret; // Your secret
@@ -39,13 +40,43 @@ router.get('/', function(req, res, next) {
     res.render('auth');
 });
 
-router.post('/login', async(req,res,next) => {
-    let mongo = await db.getDB('webapp');
+router.post('/register', async(req,res,next) => {
+    try {
+        //hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    let result = await mongo.collection('users').find().toArray();
+        //create new user
+        const newUser = new User({
+            username: req.body.username,
+            password: hashedPassword,
+            city: req.body.city
+        });
+
+        //save user and respond
+        const user = await newUser.save();
+        res.status(200).json(user);
+    } catch (err) {
+        console.log(err);
+    }
 });
 
-router.get('/login', async(req, res, next) => {
+router.post('/login', async (req, res) => {
+    try {
+        const user = await User.findOne({username: req.body.username});
+        !user && res.status(404).json("User not found");
+
+        //check password
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        !validPassword && res.status(400).json("Incorrect Password");
+
+        res.status(200).json(user);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+router.get('/spotify', async(req, res, next) => {
     let state = generateRandomString(16);
     res.cookie(stateKey, state);
 
