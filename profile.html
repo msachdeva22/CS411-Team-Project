@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- UTF-8 is an encoding of Unicode characters -->
+  <meta charset="utf-8">
+  <!-- Informs the browser how to render the page on the device -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSS Style Sheets -->
+  <!-- External Style Sheet (Bootstrap v.4) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="profile.css">
+
+  <!-- Page Title - name in the browser tab -->
+  <title>Profile</title>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-sm bg-info navbar-dark">
+    <a class="navbar-brand" href="">ReliefRegistry</a>
+    <!-- Links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="donate/donate.html">Donate</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="contact.html">Contact</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="profile.html">Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="shopping-cart/shopping-cart.html">Shopping Cart</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Profile Image -->
+  <div class="row justify-content-center mt-5 mb-3">
+  <div class="col-sm-4 d-flex flex-column justify-content-center align-items-center">
+    <img class="avatar border-info mb-3" src="profile-image.png" alt="">
+    <h4 class="text-center text-black">Profile Name</h4>
+  </div>
+  <!-- Donation History -->
+  <div class="col-sm-6 d-flex flex-column history">
+    <h2 class="text-center">Donation History</h2>
+    <div class="container">
+        <!-- Line Break -->
+        <hr class="mt-2 mb-4">
+        <!-- Row -->
+        <div class="row">
+          <!-- Items -->
+          <div class="col-md-12 col-lg-8 m-auto">
+            <!-- Product -->
+            <div class="product">
+              <div class="row text-center">
+                <!-- Name -->
+                <div class="col-md-7">
+                  <p>Personal Hygiene Kit</p>
+                </div>
+                <!-- Total -->
+                <div class="col-md-3">
+                  <p>$7</p>
+                </div>
+              </div>
+            </div>
+            <!-- Product -->
+            <div class="product">
+              <div class="row text-center">
+                <!-- Name -->
+                <div class="col-md-7">
+                  <p>Building Supplies</p>
+                </div>
+                <!-- Total -->
+                <div class="col-md-3">
+                  <p>$50</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  </div>
+</body>
+
+</html>

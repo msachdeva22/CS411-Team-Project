@@ -1,0 +1,21 @@
+:root {
+  --lightInfo: #8ed0da;
+}
+
+body {
+  background-color: var(--lightInfo);
+}
+
+.avatar {
+  width: 80%;
+  height: auto;
+  border: 5px solid;
+  border-radius: 50%;
+}
+
+.history {
+  padding-right: 3rem;
+  padding-left: 3rem;
+  align-items: center;
+  justify-content: center;
+}
