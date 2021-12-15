@@ -1,8 +1,8 @@
 export interface Issue {
   id: String;
   title: String;
-  responsible: String;
-  description: String;
-  severity: String;
+  mood: String;
+  weather: String;
+  genre: String;
   status: String;
 }
