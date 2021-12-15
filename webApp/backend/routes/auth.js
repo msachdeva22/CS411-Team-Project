@@ -7,30 +7,39 @@ const cookieParser = require('cookie-parser');
 const config = require('../config');
 const bcrypt = require('bcrypt');
 const User= require("../models/User");
+let SpotifyWebApi = require('spotify-web-api-node');
 
+const scopes = [
+    'ugc-image-upload',
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-read-currently-playing',
+    'streaming',
+    'app-remote-control',
+    'user-read-email',
+    'user-read-private',
+    'playlist-read-collaborative',
+    'playlist-modify-public',
+    'playlist-read-private',
+    'playlist-modify-private',
+    'user-library-modify',
+    'user-library-read',
+    'user-top-read',
+    'user-read-playback-position',
+    'user-read-recently-played',
+    'user-follow-read',
+    'user-follow-modify'
+];
 
-const client_id = config.sClient_Id; // Your client id
-const client_secret = config.sClient_Secret; // Your secret
-const redirect_uri = config.sRedirect_URI; // Your redirect uri
-
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
-let generateRandomString = function(length) {
-    let text = '';
-    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    for (let i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-};
-
-let stateKey = 'spotify_auth_state';
+let spotifyApi = new SpotifyWebApi({
+    clientId: config.sClient_Id,
+    clientSecret: config.sClient_Secret,
+    redirectUri: config.sRedirect_URI
+});
 
 const router = express.Router();
+
+let gUser = "";
 
 router.use(express.static(__dirname + '/public'))
     .use(cors())
@@ -69,6 +78,7 @@ router.post('/login', async (req, res) => {
         //check password
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         !validPassword && res.status(400).json("Incorrect Password");
+        gUser = req.body.username;
 
         res.status(200).json(user);
     } catch (err) {
@@ -77,7 +87,8 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/spotify', async(req, res, next) => {
-    let state = generateRandomString(16);
+    res.redirect(spotifyApi.createAuthorizeURL(scopes));
+   /* let state = generateRandomString(16);
     res.cookie(stateKey, state);
 
     // your application requests authorization
@@ -89,11 +100,62 @@ router.get('/spotify', async(req, res, next) => {
             scope: scope,
             redirect_uri: redirect_uri,
             state: state
-        }));
+        })); */
 });
 
-router.get('/callback', async (req, res, next) => {
+router.get('/send', async(req,res) => {
+    const tok = spotifyApi.getAccessToken();
+    const user2 = await User.findOneAndUpdate({username: gUser}, {
+        $set:{"currentAccToken": tok},
+    });
+    res.send("Success! You may now close this window.")
+})
 
+router.get('/callback', async (req, res, next) => {
+    const error = req.query.error;
+    const code = req.query.code;
+    const state = req.query.state;
+
+    if (error) {
+        console.error('Callback Error:', error);
+        res.send(`Callback Error: ${error}`);
+        return;
+    }
+    async function get() {
+        spotifyApi
+            .authorizationCodeGrant(code)
+            .then(data => {
+                const access_token = data.body['access_token'];
+                const refresh_token = data.body['refresh_token'];
+                const expires_in = data.body['expires_in'];
+
+                spotifyApi.setAccessToken(access_token);
+                spotifyApi.setRefreshToken(refresh_token);
+
+                console.log('access_token:', access_token);
+                console.log('refresh_token:', refresh_token);
+
+                console.log(
+                    `Sucessfully retreived access token. Expires in ${expires_in} s.`
+                );
+                res.redirect('/auth/send');
+
+                setInterval(async () => {
+                    const data = await spotifyApi.refreshAccessToken();
+                    const access_token = data.body['access_token'];
+
+                    console.log('The access token has been refreshed!');
+                    console.log('access_token:', access_token);
+                    spotifyApi.setAccessToken(access_token);
+                }, expires_in / 2 * 1000);
+            })
+            .catch(error => {
+                console.error('Error getting Tokens:', error);
+                res.send(`Error getting Tokens: ${error}`);
+            });
+    }
+    await get();
+    /*
     // your application requests refresh and access tokens
     // after checking the state parameter
 
@@ -152,7 +214,9 @@ router.get('/callback', async (req, res, next) => {
             }
         });
     }
+    */
 });
+
 
 
 module.exports = router;
