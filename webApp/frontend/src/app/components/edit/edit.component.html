@@ -1,1 +1,44 @@
 <p>edit works!</p>
+<div>
+  <br>
+  <mat-card>
+    <section class="mat-typography">
+      <h3>Update Issue</h3>
+    </section>
+    <mat-divider></mat-divider>
+    <br>
+    <form [formGroup]="updateForm" class="edit-form">
+      <mat-form-field class="field-full-width">
+        <input placeholder="Name" matInput formControlName="title" #title>
+      </mat-form-field>
+      <mat-form-field class>
+        <mat-select placeholder="Music Genre" formControlName="responsible" #responsible>
+          <mat-option value="Pop">Low</mat-option>
+          <mat-option value="Rap">Medium</mat-option>
+          <mat-option value="Indie">High</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="field-full-width">
+        <textarea placeholder="Description" matInput formControlName="description" #description></textarea>
+      </mat-form-field>
+      <mat-form-field  class="field-full-width">
+        <mat-select placeholder="Weather" formControlName="severity" #severity>
+          <mat-option value="A Rainy Day">Low</mat-option>
+          <mat-option value="Sun's Out!">Medium</mat-option>
+          <mat-option value="Winter Weather">High</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="field-full-width">
+        <mat-select placeholder="Personal Rank" formControlName="status" #status>
+          <mat-option value="Love it, want to hear it all the time">Open</mat-option>
+          <mat-option value="Every so often">In Progress</mat-option>
+          <mat-option value="Once in a blue moon">Done</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+      <br><br>
+      <button mat-raised-button color="accent" routerLink="/list">Back</button>&nbsp;
+      <button type="submit" (click)="updateIssue(title.value, responsible.value, description.value, severity.value, status.value)" [disabled]="updateForm.pristine || updateForm.invalid" mat-raised-button color="primary">Save</button>
+    </form>
+  </mat-card>
+</div>

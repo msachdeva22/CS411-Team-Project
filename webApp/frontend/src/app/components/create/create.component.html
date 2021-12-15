@@ -1,1 +1,38 @@
 <p>create works!</p>
+<div>
+  <br>
+  <mat-card>
+    <section class="mat-typography">
+      <h3>Create My Playlist Preferences!</h3>
+    </section>
+    <mat-divider></mat-divider>
+    <br>
+    <form [formGroup]="createForm" class="create-form">
+      <mat-form-field class="field-full-width">
+        <input matInput placeholder="Name" formControlName="title" #title>
+
+      </mat-form-field>
+      <mat-form-field class>
+          <mat-select placeholder="Music Genre" formControlName="responsible" #responsible>
+            <mat-option value="Pop">Low</mat-option>
+            <mat-option value="Rap">Medium</mat-option>
+            <mat-option value="Indie">High</mat-option>
+          </mat-select>
+      </mat-form-field>
+      <mat-form-field class="field-full-width">
+        <textarea matInput placeholder="Description" formControlName="description" #description></textarea>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Weather" formControlName="severity" #severity>
+          <mat-option value="A Rainy Day">Low</mat-option>
+          <mat-option value="Sun's Out!">Medium</mat-option>
+          <mat-option value="Winter Weather">High</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+      <br><br>
+      <button mat-raised-button color="accent" routerLink="/list">Back</button>&nbsp;
+      <button type="submit" (click)="addIssue(title.value, responsible.value, description.value, severity.value)" [disabled]="createForm.pristine || createForm.invalid" mat-raised-button color="primary">Save</button>
+    </form>
+  </mat-card>
+</div>
